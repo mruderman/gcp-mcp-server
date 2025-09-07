@@ -379,6 +379,22 @@ See the `examples/` directory for complete integration examples:
 - `infrastructure_as_code.py` - Managing infrastructure programmatically
 - `cost_optimization.py` - Cost analysis and optimization
 
+## Security
+
+This project implements comprehensive security measures. See our security documentation:
+
+- **[Security Policy](SECURITY.md)** - Vulnerability reporting and security procedures
+- **[Security Configuration](docs/SECURITY_CONFIG.md)** - Detailed security setup and tools
+- **[Security Audit Summary](docs/SECURITY_AUDIT_SUMMARY.md)** - Results of security audit
+- **[Developer Security Guide](docs/DEVELOPER_SECURITY_GUIDE.md)** - Security setup for developers
+
+### Security Features
+- **Multi-layered security scanning** with Bandit, Semgrep, CodeQL, Safety, and pip-audit
+- **Automated vulnerability detection** via GitHub Actions and Dependabot
+- **Secrets detection** with TruffleHog and detect-secrets
+- **Secure dependency management** with pinned versions and upper bounds
+- **Pre-commit security hooks** for early issue detection
+
 ## Security Best Practices
 
 1. **Use service accounts** with minimal permissions
