@@ -1,0 +1,87 @@
+version: 2
+updates:
+  # Python dependencies
+  - package-ecosystem: "pip"
+    directory: "/"
+    schedule:
+      interval: "weekly"
+      day: "monday"
+      time: "09:00"
+    open-pull-requests-limit: 10
+    reviewers:
+      - "asklokesh"
+    assignees:
+      - "asklokesh"
+    commit-message:
+      prefix: "security"
+      include: "scope"
+    labels:
+      - "dependencies"
+      - "security"
+    # Group security updates
+    groups:
+      security-updates:
+        patterns:
+          - "google-*"
+          - "pydantic*"
+          - "httpx"
+        update-types:
+          - "security"
+      dev-dependencies:
+        patterns:
+          - "pytest*"
+          - "ruff"
+          - "black"
+          - "isort"
+          - "mypy"
+          - "bandit"
+          - "safety"
+          - "pip-audit"
+          - "semgrep"
+          - "pre-commit"
+        update-types:
+          - "patch"
+          - "minor"
+    # Allow security updates to be auto-merged
+    allow:
+      - dependency-type: "direct"
+        update-type: "security"
+      - dependency-type: "indirect"
+        update-type: "security"
+
+  # GitHub Actions
+  - package-ecosystem: "github-actions"
+    directory: "/"
+    schedule:
+      interval: "weekly"
+      day: "monday"
+      time: "09:00"
+    open-pull-requests-limit: 5
+    reviewers:
+      - "asklokesh"
+    assignees:
+      - "asklokesh"
+    commit-message:
+      prefix: "ci"
+      include: "scope"
+    labels:
+      - "github-actions"
+      - "security"
+    # Group action updates
+    groups:
+      actions-security:
+        patterns:
+          - "github/codeql-action"
+          - "aquasecurity/*"
+          - "semgrep/*"
+          - "trufflesecurity/*"
+        update-types:
+          - "patch"
+          - "minor"
+          - "major"
+      actions-general:
+        patterns:
+          - "actions/*"
+        update-types:
+          - "patch"
+          - "minor"
