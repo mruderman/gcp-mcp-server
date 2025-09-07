@@ -71,31 +71,36 @@ pip install -e .
 
 ## Configuration
 
-Create a `.env` file or set environment variables:
+Copy the example environment file and configure your settings:
+
+```bash
+cp .env.example .env
+# Edit .env with your actual values
+```
+
+**Security Note**: Never commit `.env` files with real credentials to version control.
+
+Configuration options (see `.env.example` for complete list):
 
 ```env
-# GCP Credentials
-GOOGLE_APPLICATION_CREDENTIALS=/path/to/service-account-key.json
-GCP_PROJECT_ID=your-project-id
+# Recommended: Use Application Default Credentials
+GOOGLE_CLOUD_PROJECT=your-project-id-here
 GCP_REGION=us-central1
 GCP_ZONE=us-central1-a
 
-# OR use Application Default Credentials
-GOOGLE_CLOUD_PROJECT=your-project-id
+# Alternative: Service Account Key (less secure)
+# GOOGLE_APPLICATION_CREDENTIALS=/path/to/service-account-key.json
 
-# Optional Settings
-GCP_QUOTA_PROJECT_ID=quota-project-id
-GCP_IMPERSONATE_SERVICE_ACCOUNT=service-account@project.iam.gserviceaccount.com
-GCP_TIMEOUT=30
-GCP_MAX_RETRIES=3
-
-# Multi-Project Support
-GCP_PROD_PROJECT_ID=prod-project-id
-GCP_PROD_CREDENTIALS=/path/to/prod-key.json
-
-GCP_DEV_PROJECT_ID=dev-project-id
-GCP_DEV_CREDENTIALS=/path/to/dev-key.json
+# Optional: Multi-project support
+# GCP_PROD_PROJECT_ID=your-prod-project
+# GCP_DEV_PROJECT_ID=your-dev-project
 ```
+
+**Best Practices**:
+- Use Application Default Credentials (ADC) when possible
+- Use Workload Identity for GKE deployments  
+- Rotate service account keys regularly (every 90 days)
+- Follow principle of least privilege for IAM permissions
 
 ## Quick Start
 
@@ -122,8 +127,7 @@ Add to your Claude Desktop config:
       "command": "python",
       "args": ["-m", "gcp_mcp.server"],
       "env": {
-        "GOOGLE_APPLICATION_CREDENTIALS": "/path/to/service-account-key.json",
-        "GCP_PROJECT_ID": "your-project-id",
+        "GOOGLE_CLOUD_PROJECT": "your-project-id-here",
         "GCP_REGION": "us-central1"
       }
     }
@@ -140,7 +144,7 @@ Add to your Claude Desktop config:
 {
   "tool": "gcp_compute_list_instances",
   "arguments": {
-    "project": "my-project",
+    "project": "your-project-id-here",
     "zone": "us-central1-a",
     "filter": "status=RUNNING"
   }
@@ -152,15 +156,15 @@ Add to your Claude Desktop config:
 {
   "tool": "gcp_compute_create_instance",
   "arguments": {
-    "project": "my-project",
+    "project": "your-project-id-here",
     "zone": "us-central1-a",
-    "name": "my-instance",
-    "machine_type": "e2-medium",
-    "source_image": "projects/debian-cloud/global/images/family/debian-11",
-    "disk_size_gb": 20,
+    "name": "example-instance",
+    "machine_type": "e2-micro",  // Use smaller instance for security
+    "source_image": "projects/debian-cloud/global/images/family/debian-12",
+    "disk_size_gb": 10,  // Minimal disk size
     "network_tags": ["web-server"],
     "metadata": {
-      "startup-script": "#!/bin/bash\napt-get update\napt-get install -y nginx"
+      "startup-script": "#!/bin/bash\napt-get update"  // Minimal startup script
     }
   }
 }
@@ -173,8 +177,8 @@ Add to your Claude Desktop config:
 {
   "tool": "gcp_storage_create_bucket",
   "arguments": {
-    "project": "my-project",
-    "bucket_name": "my-unique-bucket",
+    "project": "your-project-id-here",
+    "bucket_name": "your-unique-bucket-name-here",
     "location": "US",
     "storage_class": "STANDARD",
     "lifecycle_rules": [
@@ -192,11 +196,11 @@ Add to your Claude Desktop config:
 {
   "tool": "gcp_storage_upload_object",
   "arguments": {
-    "bucket": "my-bucket",
-    "object_name": "data/file.txt",
-    "content": "File content here",
+    "bucket": "your-bucket-name-here",
+    "object_name": "data/example-file.txt",
+    "content": "Example file content",
     "content_type": "text/plain",
-    "metadata": {"key": "value"}
+    "metadata": {"environment": "development"}
   }
 }
 ```
@@ -208,7 +212,7 @@ Add to your Claude Desktop config:
 {
   "tool": "gcp_bigquery_create_dataset",
   "arguments": {
-    "project": "my-project",
+    "project": "your-project-id-here",
     "dataset_id": "my_dataset",
     "location": "US",
     "description": "My dataset description"
@@ -221,7 +225,7 @@ Add to your Claude Desktop config:
 {
   "tool": "gcp_bigquery_query",
   "arguments": {
-    "project": "my-project",
+    "project": "your-project-id-here",
     "query": "SELECT * FROM `project.dataset.table` WHERE date = CURRENT_DATE()",
     "use_legacy_sql": false,
     "maximum_bytes_billed": 1000000000
@@ -236,9 +240,9 @@ Add to your Claude Desktop config:
 {
   "tool": "gcp_functions_deploy",
   "arguments": {
-    "project": "my-project",
+    "project": "your-project-id-here",
     "region": "us-central1",
-    "name": "my-function",
+    "name": "your-function-name-here",
     "runtime": "python39",
     "entry_point": "main",
     "source_code": "def main(request):\n    return 'Hello World!'",
@@ -255,9 +259,9 @@ Add to your Claude Desktop config:
 {
   "tool": "gcp_gke_create_cluster",
   "arguments": {
-    "project": "my-project",
+    "project": "your-project-id-here",
     "zone": "us-central1-a",
-    "cluster_name": "my-cluster",
+    "cluster_name": "your-cluster-name-here",
     "initial_node_count": 3,
     "machine_type": "e2-standard-4",
     "enable_autopilot": false,
@@ -275,9 +279,9 @@ Add to your Claude Desktop config:
 {
   "tool": "gcp_cloudrun_deploy",
   "arguments": {
-    "project": "my-project",
+    "project": "your-project-id-here",
     "region": "us-central1",
-    "service_name": "my-service",
+    "service_name": "your-service-name-here",
     "image": "gcr.io/my-project/my-image:latest",
     "memory": "512Mi",
     "cpu": "1",
@@ -294,10 +298,10 @@ Add to your Claude Desktop config:
 {
   "tool": "gcp_vertexai_deploy_model",
   "arguments": {
-    "project": "my-project",
+    "project": "your-project-id-here",
     "region": "us-central1",
-    "model_name": "my-model",
-    "endpoint_name": "my-endpoint",
+    "model_name": "your-model-name-here",
+    "endpoint_name": "your-endpoint-name-here",
     "machine_type": "n1-standard-4",
     "min_replica_count": 1,
     "max_replica_count": 3

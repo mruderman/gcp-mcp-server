@@ -1,0 +1,28 @@
+# Bandit security configuration
+[bandit]
+exclude_dirs = ["tests", "build", "dist", ".git", ".venv", "venv"]
+skips = ["B101"]  # Skip assert_used test
+
+[bandit.assert_used]
+# Skip assert statements in test files
+skips = ["*/test_*.py", "*/tests.py"]
+
+[bandit.hardcoded_password_string]
+# Skip certain patterns that are not actual passwords
+# Add specific patterns here if needed
+
+[bandit.hardcoded_password_funcarg]
+# Skip function argument patterns that are not passwords
+# Add specific patterns here if needed
+
+[bandit.hardcoded_password_default]
+# Skip default argument patterns that are not passwords
+# Add specific patterns here if needed
+
+[bandit.hardcoded_bind_all_interfaces]
+# Skip binding to all interfaces in development
+# Uncomment if needed: skips = ["*/dev_*.py"]
+
+[bandit.hardcoded_tmp_directory]
+# Skip hardcoded temp directories in certain contexts
+# Add specific patterns here if needed
